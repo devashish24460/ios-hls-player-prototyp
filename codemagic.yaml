@@ -8,6 +8,7 @@ workflows:
         XCODE_SCHEME: "ios-hls-player-prototyp"
       xcode: latest
       cocoapods: default
+
     scripts:
       - name: Install dependencies
         script: |
@@ -16,8 +17,10 @@ workflows:
           ls
           echo "✅ Installing dependencies (if any)"
           pod install || echo "No Podfile found, skipping..."
+
       - name: Build iOS App
         script: |
+          echo "🚀 Building iOS app..."
           xcodebuild \
             -project "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
@@ -27,10 +30,12 @@ workflows:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             build
+
     artifacts:
       - build/Release-iphoneos/*.app
       - build/Release-iphoneos/*.ipa
+
     publishing:
       email:
         recipients:
-          - your_email@example.com
+          - devashishmushrif@gmail.com
