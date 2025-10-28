@@ -3,62 +3,28 @@ workflows:
     name: iOS HLS Prototype Build
     max_build_duration: 60
     environment:
-      vars:
-        XCODE_WORKSPACE: "ios-hls-player-prototyp.xcodeproj"
-        XCODE_SCHEME: "ios-hls-player-prototyp"
       xcode: latest
-      cocoapods: default
 
     scripts:
-      - name: Install dependencies
+      - name: Clean & Build iOS App (unsigned)
         script: |
-          cd $CM_BUILD_DIR
-          echo "✅ Checking Xcode project..."
-          ls
-          echo "✅ Installing dependencies (if any)"
-          pod install || echo "No Podfile found, skipping..."
-
-      - name: Build & Archive iOS App
-        script: |
-          echo "🚀 Archiving iOS app for IPA export..."
+          echo "🧹 Cleaning old build artifacts..."
+          rm -rf build
+          echo "🚀 Building iOS app (unsigned)..."
           xcodebuild \
-            -project "$XCODE_WORKSPACE" \
-            -scheme "$XCODE_SCHEME" \
+            -project ios-hls-player-prototyp.xcodeproj \
+            -scheme ios-hls-player-prototyp \
             -sdk iphoneos \
             -configuration Release \
-            -archivePath $CM_BUILD_DIR/build/$XCODE_SCHEME.xcarchive \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            archive
-
-      - name: Create Export Options Plist
-        script: |
-          echo "📝 Creating ExportOptions.plist..."
-          cat <<EOF > $CM_BUILD_DIR/exportOptions.plist
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key><string>ad-hoc</string>
-            <key>compileBitcode</key><false/>
-            <key>destination</key><string>export</string>
-            <key>signingStyle</key><string>manual</string>
-            <key>stripSwiftSymbols</key><true/>
-          </dict>
-          </plist>
-          EOF
-
-      - name: Export IPA
-        script: |
-          echo "📦 Exporting IPA..."
-          xcodebuild -exportArchive \
-            -archivePath $CM_BUILD_DIR/build/$XCODE_SCHEME.xcarchive \
-            -exportPath $CM_BUILD_DIR/build/ipa \
-            -exportOptionsPlist $CM_BUILD_DIR/exportOptions.plist
+            build \
+            -derivedDataPath $CM_BUILD_DIR/build
 
     artifacts:
-      - /Users/builder/Library/Developer/Xcode/DerivedData/**/Build/Products/Release-iphoneos/*.app
+      - build/Build/Products/Release-iphoneos/*.app
+
     publishing:
       email:
         recipients:
