@@ -31,9 +31,16 @@ workflows:
             CODE_SIGNING_ALLOWED=NO \
             build
 
+      - name: List build output
+        script: |
+          echo "📁 Listing generated files..."
+          find $CM_BUILD_DIR -type f -iname "*.app" -o -iname "*.ipa" || echo "No app/ipa found"
+
     artifacts:
       - build/Release-iphoneos/*.app
       - build/Release-iphoneos/*.ipa
+      - $CM_BUILD_DIR/build/Release-iphoneos/*.app
+      - $CM_BUILD_DIR/build/Release-iphoneos/*.ipa
 
     publishing:
       email:
