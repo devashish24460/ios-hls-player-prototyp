@@ -117,21 +117,25 @@
       isa = XCBuildConfiguration;
       buildSettings = {
         ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+        ALWAYS_SEARCH_USER_PATHS = NO;
         DEVELOPMENT_TEAM = "";
         INFOPLIST_FILE = Info.plist;
         IPHONEOS_DEPLOYMENT_TARGET = 14.0;
         PRODUCT_BUNDLE_IDENTIFIER = com.example.ioshlsplayer;
         PRODUCT_NAME = "$(TARGET_NAME)";
+        SWIFT_VERSION = 5.8;
       };
       name = Debug;
     };
     B22222222222222222222222 /* Release */ = {
       isa = XCBuildConfiguration;
       buildSettings = {
+        ALWAYS_SEARCH_USER_PATHS = NO;
         INFOPLIST_FILE = Info.plist;
         IPHONEOS_DEPLOYMENT_TARGET = 14.0;
         PRODUCT_BUNDLE_IDENTIFIER = com.example.ioshlsplayer;
         PRODUCT_NAME = "$(TARGET_NAME)";
+        SWIFT_VERSION = 5.8;
       };
       name = Release;
     };
@@ -163,20 +167,24 @@
       isa = XCBuildConfiguration;
       buildSettings = {
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+        ALWAYS_SEARCH_USER_PATHS = NO;
         INFOPLIST_FILE = Info.plist;
         IPHONEOS_DEPLOYMENT_TARGET = 14.0;
         PRODUCT_BUNDLE_IDENTIFIER = com.example.ioshlsplayer;
         PRODUCT_NAME = "$(TARGET_NAME)";
+        SWIFT_VERSION = 5.8;
       };
       name = Debug;
     };
     C22222222222222222222222 = {
       isa = XCBuildConfiguration;
       buildSettings = {
+        ALWAYS_SEARCH_USER_PATHS = NO;
         INFOPLIST_FILE = Info.plist;
         IPHONEOS_DEPLOYMENT_TARGET = 14.0;
         PRODUCT_BUNDLE_IDENTIFIER = com.example.ioshlsplayer;
         PRODUCT_NAME = "$(TARGET_NAME)";
+        SWIFT_VERSION = 5.8;
       };
       name = Release;
     };
