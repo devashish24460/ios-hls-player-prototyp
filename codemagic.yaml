@@ -18,29 +18,40 @@ workflows:
           echo "✅ Installing dependencies (if any)"
           pod install || echo "No Podfile found, skipping..."
 
-      - name: Build iOS App
+      - name: Build & Archive iOS App
         script: |
-          echo "🚀 Building iOS app..."
+          echo "🚀 Archiving iOS app for IPA export..."
           xcodebuild \
             -project "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
             -sdk iphoneos \
             -configuration Release \
+            -archivePath $CM_BUILD_DIR/build/$XCODE_SCHEME.xcarchive \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            build
+            archive
 
-      - name: List build output
-        script: |
-          echo "📁 Listing generated files..."
-          find $CM_BUILD_DIR -type f -iname "*.app" -o -iname "*.ipa" || echo "No app/ipa found"
+          echo "📦 Exporting IPA..."
+          xcodebuild -exportArchive \
+            -archivePath $CM_BUILD_DIR/build/$XCODE_SCHEME.xcarchive \
+            -exportPath $CM_BUILD_DIR/build/ipa \
+            -exportOptionsPlist <(echo '<?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+            "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+            <plist version="1.0">
+            <dict>
+              <key>method</key><string>ad-hoc</string>
+              <key>compileBitcode</key><false/>
+              <key>destination</key><string>export</string>
+              <key>signingStyle</key><string>manual</string>
+              <key>stripSwiftSymbols</key><true/>
+            </dict>
+            </plist>')
 
     artifacts:
+      - build/ipa/*.ipa
       - build/Release-iphoneos/*.app
-      - build/Release-iphoneos/*.ipa
-      - $CM_BUILD_DIR/build/Release-iphoneos/*.app
-      - $CM_BUILD_DIR/build/Release-iphoneos/*.ipa
 
     publishing:
       email:
